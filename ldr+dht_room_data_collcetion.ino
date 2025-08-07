@@ -1,13 +1,13 @@
 #include <ConsentiumThings.h>
 #include <DHT.h>
 
-#define DHT_PIN 13
+#define DHT_PIN 4
 #define DHT_TYP DHT11
-const int ldr = 34;
+const int ldrPin = 34;
 
 
 // Define firmware version
-#define FIRMWARE_VERSION "0.1"
+#define FIRMWARE_VERSION "0.0"
 
 // Create ConsentiumThings object with firmware version
 ConsentiumThingsDalton board(FIRMWARE_VERSION);
@@ -16,8 +16,8 @@ ConsentiumThingsDalton board(FIRMWARE_VERSION);
 DHT dht(DHT_PIN, DHT_TYP);
 
 // WiFi credentials
-const char *ssid = "YOUR_WIFI_SSID";       // Replace with your WiFi SSID
-const char *pass = "YOUR_WIFI_PASSWORD";   // Replace with your WiFi password
+const char *ssid = "VENOM";       // Replace with your WiFi SSID
+const char *pass = "RDrdRDrd!^16";   // Replace with your WiFi password
 
 // API keys
 const char *SendApiKey = "5e4fca227ad0dbfd7c507588cdc8567b";       // API key for sending data
@@ -47,6 +47,8 @@ void setup() {
   // Enable OTA updates
   board.beginOTA(ReceiveApiKey, BoardApiKey);
 
+  dht.begin();
+
   Serial.println("ConsentiumThings Board Initialized!");
   Serial.println("-----------------------------------------");
   Serial.println();
@@ -55,7 +57,7 @@ void setup() {
 void loop() 
 {
   // Prepare sample sensor data
-  double light = analogRead(ldr);
+  float ldr = analogRead(ldrPin);
   float t = dht.readTemperature();
   float h = dht.readHumidity();
   
@@ -64,8 +66,14 @@ void loop()
     Serial.println("ERROE !");
     return;
   }
-  
-  vector<double> sensorValues = {light, t, h}; // Sensor data vector
+  Serial.print("light:");
+  Serial.println(ldr);
+  Serial.print("Temp:");
+  Serial.println(t);
+  Serial.print("Humidity:");
+  Serial.println(h);
+
+  vector<double> sensorValues = {ldr, t, h}; // Sensor data vector
   const char* sensorInfo[] = {"Light Intensity", "Temperature", "Humidity"}; // Sensor information array
 
 
@@ -75,7 +83,8 @@ void loop()
   loopCounter++;
 
   // Check for OTA updates periodically
-  if (loopCounter >= updateInterval) {
+  if (loopCounter >= updateInterval) 
+  {
     Serial.println("[Consentium IoT] Checking for OTA updates...");
     board.checkAndPerformUpdate(); // Check and perform OTA updates
     loopCounter = 0; // Reset the counter after checking for updates
