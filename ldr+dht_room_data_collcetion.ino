@@ -1,5 +1,10 @@
 #include <ConsentiumThings.h>
+#include <DHT.h>
+
+#define DHT_PIN 13
+#define DHT_TYP DHT11
 const int ldr = 34;
+
 
 // Define firmware version
 #define FIRMWARE_VERSION "0.1"
@@ -7,9 +12,12 @@ const int ldr = 34;
 // Create ConsentiumThings object with firmware version
 ConsentiumThingsDalton board(FIRMWARE_VERSION);
 
+// DHT11 SETUP
+DHT dht(DHT_PIN, DHT_TYP);
+
 // WiFi credentials
-const char *ssid = "VENOM";       // Replace with your WiFi SSID
-const char *pass = "RDrdRDrd!^16";   // Replace with your WiFi password
+const char *ssid = "YOUR_WIFI_SSID";       // Replace with your WiFi SSID
+const char *pass = "YOUR_WIFI_PASSWORD";   // Replace with your WiFi password
 
 // API keys
 const char *SendApiKey = "5e4fca227ad0dbfd7c507588cdc8567b";       // API key for sending data
@@ -33,7 +41,7 @@ void setup() {
   // Begin WiFi connection
   board.initWiFi(ssid, pass);
 
-  // Initialize the board for sending data
+  //Initialise the board for sending data
   board.beginSend(SendApiKey, BoardApiKey);
 
   // Enable OTA updates
@@ -44,12 +52,21 @@ void setup() {
   Serial.println();
 }
 
-void loop() {
+void loop() 
+{
   // Prepare sample sensor data
   double light = analogRead(ldr);
-  Serial.println(light); // Sample temperature data
-  vector<double> sensorValues = {light}; // Sensor data vector
-  const char* sensorInfo[] = {"Light Intencity"}; // Sensor information array
+  float t = dht.readTemperature();
+  float h = dht.readHumidity();
+  
+  if (isnan(t) || isnan(h))
+  {
+    Serial.println("ERROE !");
+    return;
+  }
+  
+  vector<double> sensorValues = {light, t, h}; // Sensor data vector
+  const char* sensorInfo[] = {"Light Intensity", "Temperature", "Humidity"}; // Sensor information array
 
 
   board.sendData(sensorValues, sensorInfo, LOW_PRE); // Send with low precision
