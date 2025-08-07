@@ -8,8 +8,8 @@ const int ldr = 34;
 ConsentiumThingsDalton board(FIRMWARE_VERSION);
 
 // WiFi credentials
-const char *ssid = "VENOM";       // Replace with your WiFi SSID
-const char *pass = "RDrdRDrd!^16";   // Replace with your WiFi password
+const char *ssid = "YOUR_WIFI_SSID";       // Replace with your WiFi SSID
+const char *pass = "YOUR_WIFI_PASSWORD";   // Replace with your WiFi password
 
 // API keys
 const char *SendApiKey = "5e4fca227ad0dbfd7c507588cdc8567b";       // API key for sending data
