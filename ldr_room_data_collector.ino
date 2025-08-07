@@ -38,7 +38,8 @@ void setup() {
 
   // Enable OTA updates
   board.beginOTA(ReceiveApiKey, BoardApiKey);
-
+  dht.begin();
+  
   Serial.println("ConsentiumThings Board Initialized!");
   Serial.println("-----------------------------------------");
   Serial.println();
