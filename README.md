@@ -31,6 +31,7 @@ This project demonstrates how to use the **ConsentiumThings Edge Board Library**
 | Component   | ESP32 Pin |
 |-------------|-----------|
 | LDR Sensor  | 34 (ADC)  |
+| DHT 11      | 4         |
 
 ---
 
